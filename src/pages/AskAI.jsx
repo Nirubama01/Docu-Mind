@@ -1,3 +1,4 @@
+import ragService from '../api/rag/ragService';
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import {
@@ -59,7 +60,8 @@ export const AskAI = () => {
     setIsTyping(true);
 
     try {
-      await sendChatMessage(selectedDocId, question);
+	const response = await ragService.askQuestion(question, selectedDocId);
+	console.log('RAG response:', response);
     } finally {
       setIsTyping(false);
     }
