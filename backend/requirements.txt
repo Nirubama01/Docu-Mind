@@ -1,0 +1,4 @@
+pypdf
+pillow
+pytesseract
+python-multipart
