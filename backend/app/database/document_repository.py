@@ -53,6 +53,19 @@ def save_document_embedding(
     document_id: int,
     embedding: list[float],
 ) -> DocumentVector:
+    existing_embedding = db.scalar(
+        select(DocumentVector).where(
+            DocumentVector.document_id == document_id
+        )
+    )
+
+    if existing_embedding is not None:
+        existing_embedding.embedding = embedding
+        db.commit()
+        db.refresh(existing_embedding)
+
+        return existing_embedding
+
     document_vector = DocumentVector(
         document_id=document_id,
         embedding=embedding,
