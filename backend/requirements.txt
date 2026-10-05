@@ -2,3 +2,4 @@ pypdf
 pillow
 pytesseract
 python-multipart
+pymupdf
