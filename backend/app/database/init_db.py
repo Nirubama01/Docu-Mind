@@ -1,5 +1,5 @@
-from backend.app.database.vector_db import engine
-from backend.app.models import Base
+from app.database.vector_db import engine
+from app.models import Base
 
 
 def init_db():

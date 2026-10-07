@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from backend.app.models.document_vector import DocumentVector
+from app.models.document_vector import DocumentVector
 
 
 def similarity_search(
