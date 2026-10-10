@@ -24,6 +24,6 @@ class DocumentVector(Base):
     )
 
     embedding: Mapped[list[float]] = mapped_column(
-        Vector(1536),
+        Vector(384),
         nullable=False,
     )

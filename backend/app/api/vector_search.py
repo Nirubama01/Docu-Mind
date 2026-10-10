@@ -21,12 +21,12 @@ def search_documents(
     ),
     db: Session = Depends(get_db),
 ):
-    if len(query_embedding) != 1536:
+    if len(query_embedding) != 384:
         raise HTTPException(
             status_code=400,
             detail=(
                 "Invalid embedding dimension. "
-                "Expected 1536 values."
+                "Expected 384 values."
             ),
         )
 
