@@ -1,11 +1,15 @@
 from pathlib import Path
 
-from fastapi import APIRouter, UploadFile, File, Depends
+from fastapi import APIRouter, UploadFile, File, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.services.document_processor import process_document
+from app.services.embedding_service import create_embedding
 from app.database.vector_db import get_db
-from app.database.document_repository import create_document
+from app.database.document_repository import (
+    create_document,
+    save_document_embedding,
+)
 
 router = APIRouter()
 
@@ -20,21 +24,37 @@ async def upload_document(
 ):
     file_path = UPLOAD_DIR / file.filename
 
-    with open(file_path, "wb") as buffer:
-        buffer.write(await file.read())
+    try:
+        with open(file_path, "wb") as buffer:
+            buffer.write(await file.read())
 
-    extracted_text = process_document(str(file_path))
+        extracted_text = process_document(str(file_path))
 
-    document = create_document(
-        db=db,
-        filename=file.filename,
-        content=extracted_text,
-    )
+        document = create_document(
+            db=db,
+            filename=file.filename,
+            content=extracted_text,
+        )
 
-    return {
-        "id": document.id,
-        "filename": file.filename,
-        "content_type": file.content_type,
-        "message": "Document uploaded successfully",
-        "extracted_text": extracted_text,
-    }
+        if extracted_text.strip():
+            embedding = create_embedding(extracted_text)
+
+            save_document_embedding(
+                db=db,
+                document_id=document.id,
+                embedding=embedding,
+            )
+
+        return {
+            "id": document.id,
+            "filename": file.filename,
+            "content_type": file.content_type,
+            "message": "Document uploaded and indexed successfully",
+            "extracted_text": extracted_text,
+        }
+
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Document upload or indexing failed: {exc}",
+        ) from exc
