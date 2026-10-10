@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
-from backend.app.database.document_repository import (
+from app.database.document_repository import (
     create_document,
     get_document,
     get_documents,
     save_document_embedding,
 )
-from backend.app.database.vector_db import get_db
+from app.database.vector_db import get_db
 
 router = APIRouter(
     prefix="/documents",

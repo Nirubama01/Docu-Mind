@@ -1,8 +1,11 @@
 from fastapi import FastAPI
 
-from backend.app.api.database import router as database_router
-from backend.app.api.documents import router as documents_router
-from backend.app.api.vector_search import router as vector_search_router
+from app.routes.health import router as health_router
+from app.routes.documents import router as documents_router
+from app.api.documents import router as database_documents_router
+from app.api.rag import router as rag_router
+from app.api.database import router as database_router
+from app.api.vector_search import router as vector_search_router
 
 app = FastAPI(
     title="DocuMind API",
@@ -10,8 +13,12 @@ app = FastAPI(
     version="1.0.0",
 )
 
+app.include_router(health_router)
+app.include_router(documents_router)
+app.include_router(database_documents_router)
+app.include_router(rag_router)
+
 app.include_router(database_router, prefix="/api/v1")
-app.include_router(documents_router, prefix="/api/v1")
 app.include_router(vector_search_router, prefix="/api/v1")
 
 
