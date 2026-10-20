@@ -33,13 +33,29 @@ export const DocumentTable = ({
     return <FileText className="w-5 h-5 text-slate-500" />;
   };
 
-  const confirmDelete = () => {
-    if (deleteModalDoc && onDelete) {
-      onDelete(deleteModalDoc.id);
-    }
-    setDeleteModalDoc(null);
-  };
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
 
+  const confirmDelete = async () => {
+    if (!deleteModalDoc || !onDelete || deleting) return;
+
+    setDeleting(true);
+    setDeleteError('');
+
+    try {
+      await onDelete(deleteModalDoc.id);
+      setDeleteModalDoc(null);
+    } catch (error) {
+      console.error('Failed to delete document:', error);
+      setDeleteError(
+        error.response?.data?.detail ||
+          error.message ||
+          'Unable to delete this document.'
+      );
+    } finally {
+      setDeleting(false);
+    }
+  };
   if (!isLoading && documents.length === 0) {
     return (
       <EmptyState
@@ -167,12 +183,18 @@ export const DocumentTable = ({
             <Button
               variant="secondary"
               size="sm"
+              disabled={deleting}
               onClick={() => setDeleteModalDoc(null)}
             >
               Cancel
             </Button>
-            <Button variant="danger" size="sm" onClick={confirmDelete}>
-              Confirm Delete
+            <Button
+              variant="danger"
+              size="sm"
+              disabled={deleting}
+              onClick={confirmDelete}
+            >
+              {deleting ? 'Deleting...' : 'Confirm Delete'}
             </Button>
           </>
         }
@@ -182,6 +204,11 @@ export const DocumentTable = ({
           <strong className="text-slate-900">{deleteModalDoc?.name}</strong>?
           All extracted metadata, vectors, and chat history for this document will be permanently removed.
         </p>
+        {deleteError && (
+          <p role="alert" className="mt-3 text-sm text-rose-600">
+            {deleteError}
+          </p>
+        )}
       </Modal>
     </>
   );

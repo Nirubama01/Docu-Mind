@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
-from backend.app.database.vector_db import get_db
-from backend.app.database.vector_store import similarity_search
+from app.database.vector_db import get_db
+from app.database.vector_store import similarity_search
 
 router = APIRouter(
     prefix="/search",

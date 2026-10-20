@@ -33,7 +33,9 @@ export const App = () => {
             <Route path="/documents/:id" element={<DocumentDetails />} />
             <Route path="/upload" element={<UploadDocument />} />
             <Route path="/ask-ai" element={<AskAI />} />
+            {/* Temporarily disabled for the demo; preserve for future restoration.
             <Route path="/compare" element={<CompareDocuments />} />
+            */}
             <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<NotFound />} />
           </Route>

@@ -1,3 +1,4 @@
+
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -5,7 +6,6 @@ import ollama
 
 from app.database.vector_db import get_db
 from app.database.vector_store import similarity_search
-from app.database.document_repository import get_document
 from app.services.embedding_service import create_embedding
 
 
@@ -32,24 +32,14 @@ def rag_query(
             db=db,
             query_embedding=query_embedding,
             limit=5,
+            document_id=request.document_id,
         )
 
-        documents = []
-
-        for result in results:
-            if (
-                request.document_id is not None
-                and result.document_id != request.document_id
-            ):
-                continue
-
-            document = get_document(
-                db=db,
-                document_id=result.document_id,
-            )
-
-            if document is not None and document.content:
-                documents.append(document)
+        documents = [
+            document
+            for document, document_vector in results
+            if document.content
+        ]
 
         if not documents:
             return {
@@ -73,17 +63,18 @@ def rag_query(
                 {
                     "role": "system",
                     "content": (
-                        
-" You are DocuMind, a document question-answering assistant. "
-"Use only the supplied document context. "
-"The context may contain PDF text in an imperfect reading order. "
-"Distinguish stage headings from the activities listed beneath them. "
-"Do not treat every activity as a separate career stage. "
-"Do not invent missing stages or reorder the source silently. "
-"If the source order is ambiguous, say that the extracted text order is unclear. "
-"For questions asking for all stages, list only headings that include a stage "
-"name and time period, and include their time periods exactly as written."
-
+                        "You are DocuMind, a document question-answering "
+                        "assistant. Use only the supplied document context. "
+                        "The context may contain PDF text in an imperfect "
+                        "reading order. Distinguish stage headings from "
+                        "the activities listed beneath them. Do not treat "
+                        "every activity as a separate career stage. Do not "
+                        "invent missing stages or silently reorder the source. "
+                        "If the source order is ambiguous, say that the "
+                        "extracted text order is unclear. For questions "
+                        "asking for all stages, list only headings that "
+                        "include a stage name and time period, and include "
+                        "their time periods exactly as written."
                     ),
                 },
                 {
@@ -100,10 +91,8 @@ def rag_query(
             },
         )
 
-        answer = response.message.content
-
         return {
-            "answer": answer,
+            "answer": response.message.content,
             "sources": [
                 {
                     "document_id": document.id,

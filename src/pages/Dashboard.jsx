@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
@@ -7,7 +8,6 @@ import {
   Clock,
   Upload,
   ArrowRight,
-  GitCompare,
   Sparkles,
   Zap,
 } from 'lucide-react';
@@ -38,8 +38,10 @@ export const Dashboard = () => {
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             Welcome back, {user?.name || 'Researcher'}!
           </h1>
+
           <p className="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed">
-            DocuMind is ready for document extraction, natural language Q&A, and cross-document comparison. Explore the recent documents or start a new extraction.
+            DocuMind is ready for document extraction and natural language
+            Q&amp;A. Explore recent documents or start a new extraction.
           </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -51,6 +53,7 @@ export const Dashboard = () => {
             >
               Upload Document
             </Button>
+
             <Button
               variant="secondary"
               size="md"
@@ -60,15 +63,6 @@ export const Dashboard = () => {
             >
               Ask AI
             </Button>
-            <Button
-              variant="secondary"
-              size="md"
-              icon={GitCompare}
-              onClick={() => navigate('/compare')}
-              className="bg-white/10 hover:bg-white/20 text-white border-white/20"
-            >
-              Compare
-            </Button>
           </div>
         </div>
       </div>
@@ -77,9 +71,11 @@ export const Dashboard = () => {
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500">
-            System Overview & Metrics
+            System Overview &amp; Metrics
           </h2>
-          <span className="text-xs text-slate-400 font-medium">Real-time sync</span>
+          <span className="text-xs text-slate-400 font-medium">
+            Real-time sync
+          </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -92,15 +88,19 @@ export const Dashboard = () => {
             trendType="positive"
             color="brand"
           />
+
           <StatCard
             title="Processed Documents"
             value={stats.processedDocuments}
             subtitle="Extracted with high confidence"
             icon={FileCheck2}
-            trend={`${Math.round((stats.processedDocuments / (stats.totalDocuments || 1)) * 100)}% completion`}
+            trend={`${Math.round(
+              (stats.processedDocuments / (stats.totalDocuments || 1)) * 100
+            )}% completion`}
             trendType="positive"
             color="emerald"
           />
+
           <StatCard
             title="Questions Asked"
             value={stats.questionsAsked}
@@ -110,6 +110,7 @@ export const Dashboard = () => {
             trendType="positive"
             color="purple"
           />
+
           <StatCard
             title="Avg Processing Time"
             value={stats.avgProcessingTime || '1.4s'}
@@ -126,11 +127,14 @@ export const Dashboard = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-bold text-slate-900">Recent Documents</h2>
+            <h2 className="text-lg font-bold text-slate-900">
+              Recent Documents
+            </h2>
             <p className="text-xs text-slate-500">
               Latest documents uploaded and processed by DocuMind
             </p>
           </div>
+
           <Link
             to="/documents"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-700 transition-colors"
@@ -148,17 +152,20 @@ export const Dashboard = () => {
         />
       </div>
 
-      {/* Quick Feature Highlights / Pipeline Info */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+      {/* Quick Feature Highlights */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
         <div className="bg-white p-5 rounded-xl border border-slate-200/90 shadow-2xs">
           <div className="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3">
             <Zap className="w-5 h-5" />
           </div>
+
           <h3 className="text-sm font-semibold text-slate-800">
-            Automated OCR & Layout Detection
+            Automated OCR &amp; Layout Detection
           </h3>
+
           <p className="text-xs text-slate-500 mt-1">
-            Detects key-value pairs, tables, and paragraphs from scans and digital PDFs.
+            Detects key-value pairs, tables, and paragraphs from scans and
+            digital PDFs.
           </p>
         </div>
 
@@ -166,23 +173,14 @@ export const Dashboard = () => {
           <div className="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center mb-3">
             <MessageSquareCode className="w-5 h-5" />
           </div>
+
           <h3 className="text-sm font-semibold text-slate-800">
             Citation-Backed Answers
           </h3>
-          <p className="text-xs text-slate-500 mt-1">
-            Every question answered by the AI cites the precise page number and document snippet.
-          </p>
-        </div>
 
-        <div className="bg-white p-5 rounded-xl border border-slate-200/90 shadow-2xs">
-          <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3">
-            <GitCompare className="w-5 h-5" />
-          </div>
-          <h3 className="text-sm font-semibold text-slate-800">
-            Document Reconciliation
-          </h3>
           <p className="text-xs text-slate-500 mt-1">
-            Compare purchase orders and invoices to flag price discrepancies automatically.
+            Every question answered by the AI cites the precise page number
+            and document snippet.
           </p>
         </div>
       </div>

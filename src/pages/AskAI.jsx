@@ -137,7 +137,7 @@ export const AskAI = () => {
             Currently analyzing: <strong className="text-slate-900">{selectedDocument?.name || 'Document'}</strong>
           </p>
           <p className="text-[11px] text-slate-500 mt-1">
-            Responses are formulated using simulated semantic vector retrieval and cite exact page sources.
+            Answers are generated using document retrieval and AI, with source documents cited where available.
           </p>
         </div>
 

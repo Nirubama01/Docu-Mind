@@ -87,3 +87,27 @@ def get_document_embedding(
     )
 
     return db.scalar(statement)
+def delete_document(
+    db: Session,
+    document_id: int,
+) -> bool:
+    document = get_document(
+        db=db,
+        document_id=document_id,
+    )
+
+    if document is None:
+        return False
+
+    try:
+        db.query(DocumentVector).filter(
+            DocumentVector.document_id == document_id
+        ).delete(synchronize_session=False)
+
+        db.delete(document)
+        db.commit()
+        return True
+
+    except Exception:
+        db.rollback()
+        raise

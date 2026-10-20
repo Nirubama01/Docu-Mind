@@ -1,12 +1,15 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
+
 
 from app.database.document_repository import (
     create_document,
+    delete_document,
     get_document,
     get_documents,
     save_document_embedding,
 )
+
 from app.database.vector_db import get_db
 
 router = APIRouter(
@@ -116,4 +119,24 @@ def save_embedding_endpoint(
         "id": document_vector.id,
         "document_id": document_vector.document_id,
         "message": "Embedding saved successfully",
+    }
+@router.delete("/{document_id}")
+def delete_document_endpoint(
+    document_id: int,
+    db: Session = Depends(get_db),
+):
+    deleted = delete_document(
+        db=db,
+        document_id=document_id,
+    )
+
+    if not deleted:
+        raise HTTPException(
+            status_code=404,
+            detail="Document not found",
+        )
+
+    return {
+        "message": "Document deleted successfully",
+        "id": document_id,
     }

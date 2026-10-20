@@ -28,7 +28,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
     { label: 'Documents', path: '/documents', icon: Files },
     { label: 'Upload', path: '/upload', icon: UploadCloud },
     { label: 'Ask AI', path: '/ask-ai', icon: MessageSquareCode, badge: 'RAG' },
-    { label: 'Compare', path: '/compare', icon: GitCompare },
+    // { label: 'Compare', path: '/compare', icon: GitCompare },
     { label: 'Settings', path: '/settings', icon: Settings },
   ];
 
